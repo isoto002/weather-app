@@ -1,9 +1,24 @@
+import { Header } from './components/Header/Header'
+import { Hero } from './components/Hero/Hero'
+import { Forecast } from './components/Forecast/Forecast'
+import { TempChart } from './components/TempChart/TempChart'
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="glass p-8">
-        <h1 className="text-4xl font-extralight text-white">Weather App</h1>
-        <p className="text-white/60 mt-2">Loading...</p>
+    <div className="min-h-screen relative">
+      {/* Background will be added later */}
+      <div className="relative z-10">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:glass focus:px-4 focus:py-2 focus:text-white">
+          Skip to content
+        </a>
+        <Header />
+        <main id="main-content" className="pb-16">
+          <Hero />
+          <div className="mt-6">
+            <Forecast />
+          </div>
+          <TempChart />
+        </main>
       </div>
     </div>
   )
