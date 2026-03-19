@@ -8,6 +8,7 @@ interface WeatherContextType {
   // Location
   city: City | null
   setCity: (city: City) => void
+  removeCity: (city: City) => void
   recentCities: City[]
 
   // Weather data
@@ -57,6 +58,15 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     [setRecentCities]
   )
 
+  const removeCity = useCallback(
+    (city: City) => {
+      setRecentCities((prev) =>
+        prev.filter((c) => !(c.lat === city.lat && c.lon === city.lon))
+      )
+    },
+    [setRecentCities]
+  )
+
   const toggleUnit = useCallback(() => {
     setUnit((prev) => (prev === 'F' ? 'C' : 'F'))
   }, [setUnit])
@@ -80,6 +90,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       value={{
         city,
         setCity,
+        removeCity,
         recentCities,
         weatherData: weather,
         refresh: weather.refresh,

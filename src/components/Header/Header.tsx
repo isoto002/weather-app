@@ -4,7 +4,7 @@ import { searchCities } from '../../lib/api'
 import type { City, OWMGeoResult } from '../../types/weather'
 
 export function Header() {
-  const { city, setCity, recentCities, unit, toggleUnit, theme, toggleTheme } =
+  const { city, setCity, removeCity, recentCities, unit, toggleUnit, theme, toggleTheme } =
     useWeatherContext()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<OWMGeoResult[]>([])
@@ -107,17 +107,23 @@ export function Header() {
         {recentCities.length > 0 && (
           <div className="flex gap-2 mt-2 overflow-x-auto pb-1">
             {recentCities.map((c) => (
-              <button
+              <span
                 key={`${c.lat}-${c.lon}`}
-                onClick={() => handleRecentClick(c)}
-                className={`flex-shrink-0 px-3 py-1 text-xs rounded-full transition-colors ${
+                className={`flex-shrink-0 flex items-center gap-1 pl-3 pr-1.5 py-1 text-xs rounded-full transition-colors ${
                   city?.lat === c.lat && city?.lon === c.lon
                     ? 'bg-white/20 text-white'
                     : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/70'
                 }`}
               >
-                {c.name}
-              </button>
+                <button onClick={() => handleRecentClick(c)}>{c.name}</button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeCity(c) }}
+                  aria-label={`Remove ${c.name}`}
+                  className="text-white/30 hover:text-white/70 ml-0.5 text-[10px]"
+                >
+                  ✕
+                </button>
+              </span>
             ))}
           </div>
         )}
