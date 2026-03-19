@@ -1,8 +1,11 @@
 import { Background } from './components/Background/Background'
 import { Header } from './components/Header/Header'
 import { Hero } from './components/Hero/Hero'
+import { AlertBanner } from './components/AlertBanner/AlertBanner'
 import { Forecast } from './components/Forecast/Forecast'
 import { TempChart } from './components/TempChart/TempChart'
+import { WidgetGrid } from './components/WeatherWidgets/WidgetGrid'
+import { BestDay } from './components/BestDay/BestDay'
 
 function App() {
   return (
@@ -15,10 +18,13 @@ function App() {
         <Header />
         <main id="main-content" className="pb-16">
           <Hero />
+          <AlertBanner />
           <div className="mt-6">
             <Forecast />
           </div>
           <TempChart />
+          <WidgetGrid />
+          <BestDay />
         </main>
       </div>
     </div>
