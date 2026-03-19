@@ -7,7 +7,7 @@ import { OutfitWidget } from './OutfitWidget'
 export function WidgetGrid() {
   return (
     <section className="px-4 max-w-3xl mx-auto mt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="widget-grid">
         <HumidityWidget />
         <WindWidget />
         <SunWidget />
