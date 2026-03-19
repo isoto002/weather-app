@@ -8,13 +8,23 @@ export function EmailSignup() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
+  const isValidEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email.trim() || !city) return
+    const trimmed = email.trim()
+    if (!trimmed || !city) return
+
+    if (!isValidEmail(trimmed)) {
+      setStatus('error')
+      setErrorMsg('Please enter a valid email address.')
+      return
+    }
 
     setStatus('loading')
     try {
-      await subscribeToEmail(email.trim(), city.name, unit)
+      await subscribeToEmail(trimmed, city.name, unit)
       setStatus('success')
       setEmail('')
     } catch (err) {

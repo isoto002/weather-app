@@ -61,25 +61,49 @@ function buildEmail(city: string, weather: any, unit: string, unsubToken: string
 
 export default async function handler() {
   const snapshot = await db.collection('emailSubscriptions').get()
+  if (snapshot.empty) return new Response('No subscribers', { status: 200 })
 
+  // Group subscribers by city to avoid redundant weather fetches
+  const byCity = new Map<string, Array<{ email: string; unit: string; unsubscribeToken: string }>>()
   for (const doc of snapshot.docs) {
     const { email, city, unit, unsubscribeToken } = doc.data()
-    try {
-      const weather = await fetchWeather(city)
-      if (!weather) continue
+    if (!byCity.has(city)) byCity.set(city, [])
+    byCity.get(city)!.push({ email, unit, unsubscribeToken })
+  }
 
-      await sgMail.send({
-        to: email,
-        from: process.env.SENDGRID_FROM_EMAIL!,
-        subject: `Weather in ${city}: ${Math.round(weather.main.temp)}°F — ${weather.weather[0].description}`,
-        html: buildEmail(city, weather, unit, unsubscribeToken),
-      })
-    } catch (err) {
-      console.error(`Failed to send to ${email}:`, err)
+  // Fetch weather once per city (parallel)
+  const cityWeather = new Map<string, any>()
+  await Promise.all(
+    Array.from(byCity.keys()).map(async (city) => {
+      try {
+        const weather = await fetchWeather(city)
+        if (weather) cityWeather.set(city, weather)
+      } catch (err) {
+        console.error(`Failed to fetch weather for ${city}:`, err)
+      }
+    })
+  )
+
+  // Send emails in parallel batches
+  const sends = []
+  for (const [city, subscribers] of byCity) {
+    const weather = cityWeather.get(city)
+    if (!weather) continue
+
+    for (const { email, unit, unsubscribeToken } of subscribers) {
+      sends.push(
+        sgMail.send({
+          to: email,
+          from: process.env.SENDGRID_FROM_EMAIL!,
+          subject: `Weather in ${city}: ${Math.round(weather.main.temp)}°F — ${weather.weather[0].description}`,
+          html: buildEmail(city, weather, unit, unsubscribeToken),
+        }).catch((err) => console.error(`Failed to send to ${email}:`, err))
+      )
     }
   }
 
-  return new Response('Emails sent', { status: 200 })
+  await Promise.all(sends)
+  return new Response(`Sent ${sends.length} emails`, { status: 200 })
 }
 
 export const config: Config = {
