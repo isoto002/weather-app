@@ -36,7 +36,7 @@ export function Forecast() {
   }
 
   return (
-    <section className="px-4 max-w-3xl mx-auto">
+    <section className="px-4 max-w-3xl mx-auto" aria-live="polite">
       <div className="glass p-4">
         <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-3">
           5-Day Forecast

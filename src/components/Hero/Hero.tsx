@@ -2,7 +2,7 @@ import { useWeatherContext } from '../../context/WeatherContext'
 import { convertTemp, formatTemp } from '../../lib/weather-utils'
 
 export function Hero() {
-  const { city, weatherData, unit, geoError } = useWeatherContext()
+  const { city, weatherData, unit, geoError, refresh } = useWeatherContext()
   const { current, loading, error } = weatherData
 
   if (loading) {
@@ -22,6 +22,12 @@ export function Hero() {
       <section className="text-center py-16 px-4" aria-live="assertive">
         <p className="text-red-400 text-lg">{error}</p>
         <p className="text-white/40 text-sm mt-2">Try searching for a city above</p>
+        <button
+          onClick={refresh}
+          className="mt-4 px-4 py-2 text-sm glass text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          Retry
+        </button>
       </section>
     )
   }

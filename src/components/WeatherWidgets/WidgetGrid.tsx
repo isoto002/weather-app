@@ -6,7 +6,7 @@ import { OutfitWidget } from './OutfitWidget'
 
 export function WidgetGrid() {
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4">
+    <section className="px-4 max-w-3xl mx-auto mt-4" aria-live="polite">
       <div className="widget-grid">
         <HumidityWidget />
         <WindWidget />

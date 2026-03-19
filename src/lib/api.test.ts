@@ -43,9 +43,7 @@ describe('fetchForecast', () => {
       expect.stringContaining('forecast')
     )
   })
-})
 
-describe('fetchForecast', () => {
   it('throws on API error', async () => {
     mockFetch.mockResolvedValueOnce({ ok: false, status: 500 })
     await expect(fetchForecast(0, 0)).rejects.toThrow()

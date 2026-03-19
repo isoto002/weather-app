@@ -15,6 +15,13 @@ export function CityComparison() {
   const [showSearch, setShowSearch] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  // Reset comparison when primary city changes
+  useEffect(() => {
+    setCompareCity(null)
+    setCompareWeather(null)
+    setShowSearch(false)
+  }, [city])
+
   useEffect(() => {
     if (!query.trim()) { setResults([]); return }
     const timeout = setTimeout(async () => {
@@ -57,7 +64,7 @@ export function CityComparison() {
     : []
 
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4">
+    <section className="px-4 max-w-3xl mx-auto mt-4" aria-live="polite">
       <div className="glass p-4">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[9px] uppercase tracking-[0.15em] text-white/40">

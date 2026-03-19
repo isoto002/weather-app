@@ -39,19 +39,31 @@
     @apply bg-white/70 backdrop-blur-xl border-white/40;
   }
 
-  [data-theme="light"] .text-white {
-    color: #1d1d1f;
+  /* Theme-aware text colors via custom properties */
+  :root {
+    --weather-text: #ffffff;
+    --weather-text-muted: rgba(255, 255, 255, 0.6);
+    --weather-text-faint: rgba(255, 255, 255, 0.4);
   }
 
-  [data-theme="light"] .text-white\/50,
-  [data-theme="light"] .text-white\/60 {
-    color: #86868b;
+  [data-theme="light"] {
+    --weather-text: #1d1d1f;
+    --weather-text-muted: #86868b;
+    --weather-text-faint: #aeaeb2;
   }
 
+  .weather-text { color: var(--weather-text); }
+  .weather-text-muted { color: var(--weather-text-muted); }
+  .weather-text-faint { color: var(--weather-text-faint); }
+
+  /* Compatibility: override Tailwind white text utilities in light mode */
+  [data-theme="light"] .text-white { color: var(--weather-text); }
+  [data-theme="light"] .text-white\/80,
+  [data-theme="light"] .text-white\/70 { color: var(--weather-text-muted); }
+  [data-theme="light"] .text-white\/60,
+  [data-theme="light"] .text-white\/50 { color: var(--weather-text-muted); }
   [data-theme="light"] .text-white\/40,
-  [data-theme="light"] .text-white\/30 {
-    color: #aeaeb2;
-  }
+  [data-theme="light"] .text-white\/30 { color: var(--weather-text-faint); }
 }
 
 :root {

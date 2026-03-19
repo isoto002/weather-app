@@ -36,6 +36,7 @@ export function WeatherMap() {
           <div className="flex gap-1">
             <button
               onClick={() => setLayer('precipitation')}
+              aria-pressed={layer === 'precipitation'}
               className={`px-2 py-1 text-[10px] rounded-md transition-colors ${
                 layer === 'precipitation'
                   ? 'bg-white/20 text-white'
@@ -46,6 +47,7 @@ export function WeatherMap() {
             </button>
             <button
               onClick={() => setLayer('temperature')}
+              aria-pressed={layer === 'temperature'}
               className={`px-2 py-1 text-[10px] rounded-md transition-colors ${
                 layer === 'temperature'
                   ? 'bg-white/20 text-white'

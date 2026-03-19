@@ -2,7 +2,7 @@ import { useWeatherContext } from '../../context/WeatherContext'
 
 const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
 
-function degToDirection(deg: number): string {
+export function degToDirection(deg: number): string {
   return DIRECTIONS[Math.round(deg / 45) % 8]
 }
 

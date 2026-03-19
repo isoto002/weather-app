@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
-
-const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-function degToDirection(deg: number): string {
-  return DIRECTIONS[Math.round(deg / 45) % 8]
-}
+import { degToDirection } from './WindWidget'
 
 describe('Wind direction conversion', () => {
   it('converts 0 degrees to N', () => { expect(degToDirection(0)).toBe('N') })
