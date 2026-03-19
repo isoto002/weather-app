@@ -3,6 +3,24 @@ import { describe, it, expect, vi } from 'vitest'
 import App from './App'
 import { WeatherProvider } from './context/WeatherContext'
 
+HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+  clearRect: vi.fn(),
+  fillRect: vi.fn(),
+  beginPath: vi.fn(),
+  moveTo: vi.fn(),
+  lineTo: vi.fn(),
+  stroke: vi.fn(),
+  arc: vi.fn(),
+  fill: vi.fn(),
+  createRadialGradient: vi.fn(() => ({
+    addColorStop: vi.fn(),
+  })),
+  globalAlpha: 1,
+  fillStyle: '',
+  strokeStyle: '',
+  lineWidth: 1,
+})) as any
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
