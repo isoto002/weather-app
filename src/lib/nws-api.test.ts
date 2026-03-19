@@ -40,4 +40,10 @@ describe('fetchAlerts', () => {
     const result = await fetchAlerts(37.77, -122.42)
     expect(result).toEqual([])
   })
+
+  it('returns empty array on network failure', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('Network error'))
+    const result = await fetchAlerts(37.77, -122.42)
+    expect(result).toEqual([])
+  })
 })

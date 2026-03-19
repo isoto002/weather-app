@@ -105,7 +105,7 @@ export interface DayForecast {
   dayName: string
   tempHigh: number
   tempLow: number
-  condition: string
+  condition: WeatherCondition
   conditionId: number
   icon: string
   pop: number

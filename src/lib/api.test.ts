@@ -45,6 +45,13 @@ describe('fetchForecast', () => {
   })
 })
 
+describe('fetchForecast', () => {
+  it('throws on API error', async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 500 })
+    await expect(fetchForecast(0, 0)).rejects.toThrow()
+  })
+})
+
 describe('fetchAirQuality', () => {
   it('fetches AQI by lat/lon', async () => {
     const mockResponse = { list: [{ main: { aqi: 2 } }] }
@@ -55,6 +62,11 @@ describe('fetchAirQuality', () => {
 
     const result = await fetchAirQuality(37.77, -122.42)
     expect(result).toEqual(mockResponse)
+  })
+
+  it('throws on API error', async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 500 })
+    await expect(fetchAirQuality(0, 0)).rejects.toThrow()
   })
 })
 
