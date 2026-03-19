@@ -49,10 +49,10 @@ export function Forecast() {
                 {WEATHER_ICONS[day.icon] ?? '\uD83C\uDF24\uFE0F'}
               </p>
               <p className="text-xs text-white/70">
-                {Math.round(convertTemp(day.tempHigh, unit))}\u00B0
+                {Math.round(convertTemp(day.tempHigh, unit))}°
               </p>
               <p className="text-xs text-white/40">
-                {Math.round(convertTemp(day.tempLow, unit))}\u00B0
+                {Math.round(convertTemp(day.tempLow, unit))}°
               </p>
             </div>
           ))}

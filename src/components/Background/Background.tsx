@@ -20,13 +20,15 @@ export function Background() {
 
   const config = getBackgroundConfig(condition, isNight)
 
-  // Adjust gradient for light mode
+  // Adjust gradient for light mode — blend toward white for softer pastel backgrounds
   const gradient = theme === 'light'
     ? buildGradientCSS(config.gradient.map((c) => {
-        // Lighten colors for light mode
         return c.replace(/^#/, '')
           .match(/.{2}/g)!
-          .map((hex) => Math.min(255, parseInt(hex, 16) + 80).toString(16).padStart(2, '0'))
+          .map((hex) => {
+            const v = parseInt(hex, 16)
+            return Math.round(v + (255 - v) * 0.55).toString(16).padStart(2, '0')
+          })
           .join('')
           .replace(/^/, '#')
       }))

@@ -39,31 +39,40 @@
     @apply bg-white/70 backdrop-blur-xl border-white/40;
   }
 
-  /* Theme-aware text colors via custom properties */
-  :root {
-    --weather-text: #ffffff;
-    --weather-text-muted: rgba(255, 255, 255, 0.6);
-    --weather-text-faint: rgba(255, 255, 255, 0.4);
-  }
-
+  /*
+   * Light mode: override Tailwind's --color-white so all text-white/* utilities
+   * automatically resolve to dark colors. This beats @supports specificity
+   * because Tailwind's color-mix uses var(--color-white) as the base.
+   */
   [data-theme="light"] {
-    --weather-text: #1d1d1f;
-    --weather-text-muted: #86868b;
-    --weather-text-faint: #aeaeb2;
+    --color-white: #1d1d1f;
   }
 
-  .weather-text { color: var(--weather-text); }
-  .weather-text-muted { color: var(--weather-text-muted); }
-  .weather-text-faint { color: var(--weather-text-faint); }
+  /* Glass cards need actual white background in light mode, not the overridden --color-white */
+  [data-theme="light"] .glass {
+    background-color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
 
-  /* Compatibility: override Tailwind white text utilities in light mode */
-  [data-theme="light"] .text-white { color: var(--weather-text); }
-  [data-theme="light"] .text-white\/80,
-  [data-theme="light"] .text-white\/70 { color: var(--weather-text-muted); }
-  [data-theme="light"] .text-white\/60,
-  [data-theme="light"] .text-white\/50 { color: var(--weather-text-muted); }
-  [data-theme="light"] .text-white\/40,
-  [data-theme="light"] .text-white\/30 { color: var(--weather-text-faint); }
+  /* Restore actual white where needed */
+  [data-theme="light"] .bg-white\/5,
+  [data-theme="light"] .bg-white\/10,
+  [data-theme="light"] .bg-white\/20 {
+    background-color: rgba(200, 200, 210, 0.15);
+  }
+
+  [data-theme="light"] .border-white\/10,
+  [data-theme="light"] .border-white\/5 {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .border-dashed {
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  [data-theme="light"] .placeholder-white\/30::placeholder {
+    color: #aeaeb2;
+  }
 }
 
 :root {
