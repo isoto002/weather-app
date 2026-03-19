@@ -39,6 +39,22 @@
     @apply bg-white/70 backdrop-blur-xl border-white/40;
   }
 
+  /* Section label style — subtle accent, readable in both modes */
+  .section-label {
+    color: var(--label-color);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  :root {
+    --label-color: rgba(255, 255, 255, 0.55);
+  }
+
+  [data-theme="light"] {
+    --label-color: #636366;
+  }
+
   /*
    * Light mode: override Tailwind's --color-white so all text-white/* utilities
    * automatically resolve to dark colors. This beats @supports specificity

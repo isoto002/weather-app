@@ -24,7 +24,7 @@ export function SunWidget() {
 
   return (
     <div className="glass p-4">
-      <p className="text-[9px] uppercase tracking-[0.15em] text-white/40 mb-2">
+      <p className="section-label mb-2">
         Sunrise & Sunset
       </p>
 

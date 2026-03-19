@@ -11,7 +11,7 @@ export function HumidityWidget() {
 
   return (
     <div className="glass p-4">
-      <p className="text-[9px] uppercase tracking-[0.15em] text-white/40 mb-2">Humidity</p>
+      <p className="section-label mb-2">Humidity</p>
       <p className="text-2xl font-light text-white">{humidity}%</p>
       <p className="text-[10px] text-white/50 mt-1">{label}</p>
     </div>

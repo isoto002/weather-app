@@ -30,7 +30,7 @@ export function WeatherMap() {
     <section className="px-4 max-w-3xl mx-auto mt-4">
       <div className="glass p-4 overflow-hidden">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[9px] uppercase tracking-[0.15em] text-white/40">
+          <p className="section-label">
             Weather Map
           </p>
           <div className="flex gap-1">

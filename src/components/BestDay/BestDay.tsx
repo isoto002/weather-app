@@ -13,7 +13,7 @@ export function BestDay() {
   return (
     <section className="px-4 max-w-3xl mx-auto mt-4">
       <div className="glass p-5 text-center">
-        <p className="text-[9px] uppercase tracking-[0.15em] text-white/40 mb-3">
+        <p className="section-label mb-3">
           Best Day This Week
         </p>
         <p className="text-lg text-white font-light">
