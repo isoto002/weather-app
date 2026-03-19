@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout Approach Options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111; color: white; padding: 40px 20px; }
+  h1 { text-align: center; font-weight: 300; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 40px; }
+  .options { display: flex; gap: 24px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .option { flex: 1; min-width: 380px; max-width: 420px; border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); cursor: pointer; transition: border-color 0.3s, transform 0.2s; }
+  .option:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-4px); }
+  .option.selected { border-color: #007AFF; box-shadow: 0 0 20px rgba(0,122,255,0.3); }
+  .option-label { padding: 20px; background: rgba(255,255,255,0.05); }
+  .option-label h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .option-label p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .option-label .badge { display: inline-block; background: #007AFF; color: white; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 6px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .demo { height: 480px; position: relative; overflow: hidden; overflow-y: auto; }
+
+  /* Shared glass card style */
+  .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
+  .small-text { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); }
+  .temp-big { font-size: 42px; font-weight: 200; color: white; line-height: 1; }
+  .temp-sm { font-size: 18px; font-weight: 300; color: white; }
+  .label { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* ===== OPTION A: Single Page ===== */
+  .spa-bg { background: linear-gradient(180deg, #1d1d2e 0%, #2a2a4a 50%, #1d2d3f 100%); padding: 16px; }
+  .spa-hero { text-align: center; padding: 20px 0 16px; }
+  .spa-forecast { display: flex; gap: 6px; margin-top: 12px; }
+  .spa-day { flex: 1; text-align: center; padding: 8px 4px; }
+  .spa-day .day-name { font-size: 9px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+  .spa-day .day-icon { font-size: 16px; margin-bottom: 4px; }
+  .spa-day .day-temp { font-size: 11px; color: rgba(255,255,255,0.7); }
+  .spa-widgets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .spa-widget { padding: 12px; }
+  .spa-widget h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+  .spa-widget .value { font-size: 20px; font-weight: 300; color: white; }
+  .spa-widget .sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .spa-chart { margin-top: 12px; padding: 14px; }
+  .spa-chart h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+  .chart-placeholder { height: 60px; background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border-radius: 8px; position: relative; overflow: hidden; }
+  .chart-line { position: absolute; bottom: 0; left: 0; right: 0; height: 100%; }
+  .chart-line svg { width: 100%; height: 100%; }
+
+  /* ===== OPTION B: Multi-Page ===== */
+  .mp-bg { background: linear-gradient(180deg, #1d1d2e 0%, #2a2a4a 100%); }
+  .mp-nav { display: flex; background: rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .mp-nav-item { flex: 1; text-align: center; padding: 10px 4px; font-size: 10px; color: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; }
+  .mp-nav-item.active { color: #007AFF; border-bottom-color: #007AFF; }
+  .mp-page { padding: 16px; }
+  .mp-page-label { text-align: center; font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 20px; padding: 12px; border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; }
+
+  /* ===== OPTION C: Dashboard ===== */
+  .dash-bg { background: linear-gradient(180deg, #1d1d2e 0%, #2a2a4a 100%); padding: 12px; }
+  .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
+  .dash-header h3 { font-size: 14px; font-weight: 500; }
+  .dash-edit { font-size: 10px; color: #007AFF; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto; gap: 8px; }
+  .dash-card { padding: 12px; cursor: grab; transition: transform 0.2s; }
+  .dash-card:hover { transform: scale(1.02); }
+  .dash-card.wide { grid-column: span 2; }
+  .dash-card h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+  .dash-card .value { font-size: 22px; font-weight: 300; color: white; }
+  .dash-card .sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .dash-drag-hint { position: absolute; top: 6px; right: 8px; font-size: 10px; color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<h1>Which app layout feels right?</h1>
+<p class="subtitle">Each shows how the same weather data would be organized — click to select</p>
+
+<div class="options">
+
+  <!-- OPTION A: Single Page App -->
+  <div class="option" onclick="document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')">
+    <div class="demo spa-bg">
+      <!-- Search bar -->
+      <div class="glass" style="padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span style="font-size: 14px; opacity: 0.4;">&#128269;</span>
+        <span style="font-size: 12px; color: rgba(255,255,255,0.3);">Search city...</span>
+      </div>
+
+      <!-- Hero -->
+      <div class="spa-hero">
+        <div class="small-text" style="margin-bottom: 8px;">San Francisco</div>
+        <div class="temp-big">72°</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 6px;">Partly Cloudy</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px;">H: 78°  L: 62°</div>
+      </div>
+
+      <!-- 5-day forecast -->
+      <div class="glass" style="padding: 10px;">
+        <div class="small-text" style="margin-bottom: 8px; padding-left: 4px;">5-Day Forecast</div>
+        <div class="spa-forecast">
+          <div class="spa-day"><div class="day-name">MON</div><div class="day-icon">&#9728;&#65039;</div><div class="day-temp">78/62</div></div>
+          <div class="spa-day"><div class="day-name">TUE</div><div class="day-icon">&#9925;</div><div class="day-temp">72/58</div></div>
+          <div class="spa-day"><div class="day-name">WED</div><div class="day-icon">&#127783;&#65039;</div><div class="day-temp">65/55</div></div>
+          <div class="spa-day"><div class="day-name">THU</div><div class="day-icon">&#9729;&#65039;</div><div class="day-temp">68/54</div></div>
+          <div class="spa-day"><div class="day-name">FRI</div><div class="day-icon">&#9728;&#65039;</div><div class="day-temp">75/60</div></div>
+        </div>
+      </div>
+
+      <!-- Temp chart -->
+      <div class="glass spa-chart">
+        <h4>Temperature Trend</h4>
+        <div class="chart-placeholder">
+          <div class="chart-line">
+            <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+              <polyline points="0,20 40,15 80,30 120,35 160,25 200,18" fill="none" stroke="rgba(0,122,255,0.5)" stroke-width="2"/>
+              <polyline points="0,40 40,42 80,48 120,50 160,44 200,38" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget grid -->
+      <div class="spa-widgets">
+        <div class="glass spa-widget"><h4>Humidity</h4><div class="value">68%</div><div class="sub">Moderate</div></div>
+        <div class="glass spa-widget"><h4>Wind</h4><div class="value">12 mph</div><div class="sub">WNW</div></div>
+        <div class="glass spa-widget"><h4>Sunrise</h4><div class="value">6:42</div><div class="sub">Sunset 7:18</div></div>
+        <div class="glass spa-widget"><h4>AQI</h4><div class="value">42</div><div class="sub">Good</div></div>
+      </div>
+    </div>
+    <div class="option-label">
+      <div class="badge">Recommended</div>
+      <h3>A. Single-Page Scroll</h3>
+      <p>Everything on one page — scroll to explore. Just like Apple Weather. Hero at top, forecast, chart, then widget cards. Simple, beautiful, fast.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B: Multi-Page -->
+  <div class="option" onclick="document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')">
+    <div class="demo mp-bg">
+      <!-- Nav bar -->
+      <div class="mp-nav">
+        <div class="mp-nav-item active">Home</div>
+        <div class="mp-nav-item">Map</div>
+        <div class="mp-nav-item">Compare</div>
+        <div class="mp-nav-item">Settings</div>
+      </div>
+
+      <div class="mp-page">
+        <!-- Search -->
+        <div class="glass" style="padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+          <span style="font-size: 14px; opacity: 0.4;">&#128269;</span>
+          <span style="font-size: 12px; color: rgba(255,255,255,0.3);">Search city...</span>
+        </div>
+
+        <!-- Current weather -->
+        <div style="text-align: center; padding: 20px 0;">
+          <div class="small-text" style="margin-bottom: 8px;">San Francisco</div>
+          <div class="temp-big">72°</div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 6px;">Partly Cloudy</div>
+        </div>
+
+        <!-- Forecast strip -->
+        <div class="glass" style="padding: 10px; margin-bottom: 12px;">
+          <div class="small-text" style="margin-bottom: 8px; padding-left: 4px;">5-Day Forecast</div>
+          <div style="display: flex; gap: 6px;">
+            <div class="spa-day" style="flex:1;text-align:center;padding:6px"><div class="day-name">MON</div><div class="day-icon">&#9728;&#65039;</div><div class="day-temp">78/62</div></div>
+            <div class="spa-day" style="flex:1;text-align:center;padding:6px"><div class="day-name">TUE</div><div class="day-icon">&#9925;</div><div class="day-temp">72/58</div></div>
+            <div class="spa-day" style="flex:1;text-align:center;padding:6px"><div class="day-name">WED</div><div class="day-icon">&#127783;&#65039;</div><div class="day-temp">65/55</div></div>
+            <div class="spa-day" style="flex:1;text-align:center;padding:6px"><div class="day-name">THU</div><div class="day-icon">&#9729;&#65039;</div><div class="day-temp">68/54</div></div>
+            <div class="spa-day" style="flex:1;text-align:center;padding:6px"><div class="day-name">FRI</div><div class="day-icon">&#9728;&#65039;</div><div class="day-temp">75/60</div></div>
+          </div>
+        </div>
+
+        <!-- Other pages hint -->
+        <div class="mp-page-label">&#8592; Map, Compare, and Settings live on separate pages &#8594;</div>
+        <div class="mp-page-label" style="margin-top: 8px;">Widgets like AQI, Sunrise, Outfit are under a "Details" tab or separate page</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <h3>B. Multi-Page with Navigation</h3>
+      <p>Features split across pages with a nav bar. Home shows weather, Map/Compare/Settings get their own pages. Cleaner separation but more clicks to explore.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C: Dashboard Grid -->
+  <div class="option" onclick="document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')">
+    <div class="demo dash-bg">
+      <div class="dash-header">
+        <h3>My Weather</h3>
+        <span class="dash-edit">Edit Layout</span>
+      </div>
+
+      <div class="dash-grid">
+        <!-- Main weather card -->
+        <div class="glass dash-card wide" style="text-align: center; padding: 16px; position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <div class="small-text" style="margin-bottom: 6px;">San Francisco</div>
+          <div style="font-size: 36px; font-weight: 200; color: white;">72°</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">Partly Cloudy</div>
+        </div>
+
+        <div class="glass dash-card" style="position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>Humidity</h4>
+          <div class="value">68%</div>
+          <div class="sub">Moderate</div>
+        </div>
+
+        <div class="glass dash-card" style="position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>Wind</h4>
+          <div class="value">12 mph</div>
+          <div class="sub">WNW</div>
+        </div>
+
+        <div class="glass dash-card" style="position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>AQI</h4>
+          <div class="value">42</div>
+          <div class="sub">Good</div>
+        </div>
+
+        <div class="glass dash-card" style="position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>Sunrise</h4>
+          <div class="value">6:42 AM</div>
+          <div class="sub">Golden hr 6:55</div>
+        </div>
+
+        <div class="glass dash-card wide" style="position: relative;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>5-Day Forecast</h4>
+          <div style="display: flex; gap: 6px; margin-top: 6px;">
+            <div style="flex:1;text-align:center"><div style="font-size:9px;color:rgba(255,255,255,0.4)">MON</div><div style="font-size:14px;margin:4px 0">&#9728;&#65039;</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">78/62</div></div>
+            <div style="flex:1;text-align:center"><div style="font-size:9px;color:rgba(255,255,255,0.4)">TUE</div><div style="font-size:14px;margin:4px 0">&#9925;</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">72/58</div></div>
+            <div style="flex:1;text-align:center"><div style="font-size:9px;color:rgba(255,255,255,0.4)">WED</div><div style="font-size:14px;margin:4px 0">&#127783;&#65039;</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">65/55</div></div>
+            <div style="flex:1;text-align:center"><div style="font-size:9px;color:rgba(255,255,255,0.4)">THU</div><div style="font-size:14px;margin:4px 0">&#9729;&#65039;</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">68/54</div></div>
+            <div style="flex:1;text-align:center"><div style="font-size:9px;color:rgba(255,255,255,0.4)">FRI</div><div style="font-size:14px;margin:4px 0">&#9728;&#65039;</div><div style="font-size:10px;color:rgba(255,255,255,0.6)">75/60</div></div>
+          </div>
+        </div>
+
+        <div class="glass dash-card wide" style="position: relative; text-align: center; padding: 16px;">
+          <span class="dash-drag-hint">&#9776;</span>
+          <h4>Outfit Suggestion</h4>
+          <div style="font-size: 28px; margin: 8px 0;">&#128085; &#128374;&#65039; &#129507;</div>
+          <div class="sub">Light layers + sunglasses</div>
+        </div>
+      </div>
+    </div>
+    <div class="option-label">
+      <h3>C. Dashboard Grid</h3>
+      <p>Drag-and-drop widget cards in a customizable grid. Like Windows widgets. Cool and premium, but significantly more complex to build.</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

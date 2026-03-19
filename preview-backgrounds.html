@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Background Options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111; color: white; padding: 40px 20px; }
+  h1 { text-align: center; font-weight: 300; font-size: 28px; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 40px; }
+  .options { display: flex; gap: 24px; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .option { flex: 1; min-width: 340px; max-width: 380px; border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); cursor: pointer; transition: border-color 0.3s, transform 0.2s; }
+  .option:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-4px); }
+  .option.selected { border-color: #007AFF; box-shadow: 0 0 20px rgba(0,122,255,0.3); }
+  .option-label { padding: 20px; background: rgba(255,255,255,0.05); }
+  .option-label h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .option-label p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .demo { height: 300px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .weather-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px 36px; text-align: center; z-index: 2; }
+  .temp { font-size: 52px; font-weight: 200; color: white; line-height: 1; }
+  .city { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+  .condition { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+  /* Option A: Full Animation */
+  .demo-full { background: linear-gradient(180deg, #1a1a2e 0%, #2d3a5c 50%, #4a5a7a 100%); }
+  @keyframes rain { 0% { transform: translateY(-20px); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(320px); opacity: 0.3; } }
+  .raindrop { position: absolute; width: 2px; background: linear-gradient(transparent, rgba(174,194,224,0.6)); border-radius: 2px; animation: rain linear infinite; z-index: 1; }
+  @keyframes lightning { 0%, 95%, 100% { opacity: 0; } 96% { opacity: 0.8; } 97% { opacity: 0; } 98% { opacity: 0.5; } }
+  .lightning { position: absolute; inset: 0; background: rgba(255,255,255,0.1); animation: lightning 4s infinite; z-index: 0; }
+
+  /* Option B: Gradient Only */
+  @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  .demo-gradient { background: linear-gradient(270deg, #87CEEB, #4a5568, #1a1a2e, #2c5364, #87CEEB); background-size: 500% 500%; animation: gradientShift 12s ease infinite; }
+
+  /* Option C: Gradient + Subtle Particles */
+  .demo-subtle { background: linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+  @keyframes snowfall { 0% { transform: translateY(-10px) translateX(0px); opacity: 0; } 10% { opacity: 0.6; } 100% { transform: translateY(320px) translateX(30px); opacity: 0; } }
+  .snowflake { position: absolute; background: white; border-radius: 50%; animation: snowfall linear infinite; z-index: 1; }
+  @keyframes gentleGlow { 0%, 100% { opacity: 0.03; } 50% { opacity: 0.08; } }
+  .glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%); animation: gentleGlow 6s ease-in-out infinite; z-index: 0; }
+</style>
+</head>
+<body>
+
+<h1>How should the background change with weather?</h1>
+<p class="subtitle">Click the one that feels right — each is a live preview</p>
+
+<div class="options">
+
+  <!-- OPTION A: Full Animation -->
+  <div class="option" onclick="this.classList.toggle('selected')">
+    <div class="demo demo-full" id="demoFull">
+      <div class="lightning"></div>
+      <div class="weather-card">
+        <div class="city">Seattle</div>
+        <div class="temp">52°</div>
+        <div class="condition">Thunderstorm</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <h3>A. Full Animation</h3>
+      <p>Rain drops falling, lightning flashes, snow drifting, clouds floating. Maximum immersion — the weather comes alive on screen.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B: Gradient Shifts Only -->
+  <div class="option" onclick="this.classList.toggle('selected')">
+    <div class="demo demo-gradient">
+      <div class="weather-card">
+        <div class="city">Denver</div>
+        <div class="temp">68°</div>
+        <div class="condition">Changing Skies</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <h3>B. Gradient Shifts Only</h3>
+      <p>Background smoothly transitions between color palettes. Sunny = warm blues, cloudy = grays, stormy = deep navy. Elegant, zero animation overhead.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C: Gradient + Subtle Particles -->
+  <div class="option" onclick="this.classList.toggle('selected')">
+    <div class="demo demo-subtle" id="demoSubtle">
+      <div class="glow" style="width: 200px; height: 200px; top: -50px; right: -30px;"></div>
+      <div class="weather-card">
+        <div class="city">Aspen</div>
+        <div class="temp">28°</div>
+        <div class="condition">Light Snow</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <h3>C. Gradient + Subtle Particles (Recommended)</h3>
+      <p>Dynamic gradients with gentle particle effects — soft rain streaks, floating snow dots, warm sun glow. Apple-level polish without being distracting.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Generate raindrops for Option A
+  const demoFull = document.getElementById('demoFull');
+  for (let i = 0; i < 40; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'raindrop';
+    drop.style.left = Math.random() * 100 + '%';
+    drop.style.height = (12 + Math.random() * 16) + 'px';
+    drop.style.animationDuration = (0.4 + Math.random() * 0.4) + 's';
+    drop.style.animationDelay = Math.random() * 2 + 's';
+    demoFull.appendChild(drop);
+  }
+
+  // Generate snowflakes for Option C
+  const demoSubtle = document.getElementById('demoSubtle');
+  for (let i = 0; i < 25; i++) {
+    const flake = document.createElement('div');
+    flake.className = 'snowflake';
+    const size = 2 + Math.random() * 4;
+    flake.style.width = size + 'px';
+    flake.style.height = size + 'px';
+    flake.style.left = Math.random() * 100 + '%';
+    flake.style.opacity = 0.2 + Math.random() * 0.4;
+    flake.style.animationDuration = (4 + Math.random() * 6) + 's';
+    flake.style.animationDelay = Math.random() * 5 + 's';
+    demoSubtle.appendChild(flake);
+  }
+</script>
+
+</body>
+</html>
