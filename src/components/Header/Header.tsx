@@ -9,7 +9,7 @@ export function Header() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<OWMGeoResult[]>([])
   const [showResults, setShowResults] = useState(false)
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>()
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

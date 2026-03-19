@@ -45,7 +45,7 @@ export function TempChart() {
                 color: 'white',
                 fontSize: '12px',
               }}
-              formatter={(value: number) => [`${value}\u00B0${unit}`, '']}
+              formatter={(value) => [`${value}\u00B0${unit}`, '']}
             />
             <Line
               type="monotone"
