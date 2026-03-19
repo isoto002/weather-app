@@ -1,3 +1,4 @@
+import { useWeatherContext } from './context/WeatherContext'
 import { Background } from './components/Background/Background'
 import { Header } from './components/Header/Header'
 import { Hero } from './components/Hero/Hero'
@@ -11,8 +12,9 @@ import { WeatherMap } from './components/WeatherMap/WeatherMap'
 import { EmailSignup } from './components/EmailSignup/EmailSignup'
 
 function App() {
+  const { theme } = useWeatherContext()
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative" data-theme={theme}>
       <Background />
       <div className="relative z-10">
         <a

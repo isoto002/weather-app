@@ -34,6 +34,24 @@
   .widget-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 gap-3;
   }
+
+  [data-theme="light"] .glass {
+    @apply bg-white/70 backdrop-blur-xl border-white/40;
+  }
+
+  [data-theme="light"] .text-white {
+    color: #1d1d1f;
+  }
+
+  [data-theme="light"] .text-white\/50,
+  [data-theme="light"] .text-white\/60 {
+    color: #86868b;
+  }
+
+  [data-theme="light"] .text-white\/40,
+  [data-theme="light"] .text-white\/30 {
+    color: #aeaeb2;
+  }
 }
 
 :root {
