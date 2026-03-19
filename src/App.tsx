@@ -6,13 +6,19 @@ import { Forecast } from './components/Forecast/Forecast'
 import { TempChart } from './components/TempChart/TempChart'
 import { WidgetGrid } from './components/WeatherWidgets/WidgetGrid'
 import { BestDay } from './components/BestDay/BestDay'
+import { CityComparison } from './components/CityComparison/CityComparison'
+import { WeatherMap } from './components/WeatherMap/WeatherMap'
+import { EmailSignup } from './components/EmailSignup/EmailSignup'
 
 function App() {
   return (
     <div className="min-h-screen relative">
       <Background />
       <div className="relative z-10">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:glass focus:px-4 focus:py-2 focus:text-white">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:glass focus:px-4 focus:py-2 focus:text-white"
+        >
           Skip to content
         </a>
         <Header />
@@ -25,7 +31,13 @@ function App() {
           <TempChart />
           <WidgetGrid />
           <BestDay />
+          <CityComparison />
+          <WeatherMap />
+          <EmailSignup />
         </main>
+        <footer className="text-center py-6 text-white/20 text-xs">
+          Weather data from OpenWeatherMap
+        </footer>
       </div>
     </div>
   )
