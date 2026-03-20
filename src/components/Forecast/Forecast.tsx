@@ -1,5 +1,6 @@
 import { useWeatherContext } from '../../context/WeatherContext'
 import { convertTemp } from '../../lib/weather-utils'
+import { useScrollReveal } from '../../hooks/useScrollReveal'
 
 const WEATHER_ICONS: Record<string, string> = {
   '01d': '\u2600\uFE0F', '01n': '\uD83C\uDF19',
@@ -16,6 +17,7 @@ const WEATHER_ICONS: Record<string, string> = {
 export function Forecast() {
   const { weatherData, unit } = useWeatherContext()
   const { forecast, loading } = weatherData
+  const revealRef = useScrollReveal(0)
 
   if (loading || forecast.length === 0) {
     return (
@@ -36,7 +38,7 @@ export function Forecast() {
   }
 
   return (
-    <section className="px-4 max-w-3xl mx-auto" aria-live="polite">
+    <section ref={revealRef} className="px-4 max-w-3xl mx-auto" aria-live="polite">
       <div className="glass p-4">
         <p className="section-label mb-3">
           5-Day Forecast

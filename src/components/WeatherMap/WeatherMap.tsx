@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import { useWeatherContext } from '../../context/WeatherContext'
+import { useScrollReveal } from '../../hooks/useScrollReveal'
 import 'leaflet/dist/leaflet.css'
 
 const API_KEY = import.meta.env.VITE_OWM_API_KEY
@@ -18,6 +19,7 @@ function MapUpdater({ lat, lon }: { lat: number; lon: number }) {
 export function WeatherMap() {
   const { city } = useWeatherContext()
   const [layer, setLayer] = useState<MapLayer>('precipitation')
+  const revealRef = useScrollReveal(375)
 
   if (!city) return null
 
@@ -27,7 +29,7 @@ export function WeatherMap() {
       : `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`
 
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4">
+    <section ref={revealRef} className="px-4 max-w-3xl mx-auto mt-4">
       <div className="glass p-4 overflow-hidden">
         <div className="flex items-center justify-between mb-3">
           <p className="section-label">

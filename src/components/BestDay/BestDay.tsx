@@ -1,9 +1,11 @@
 import { useWeatherContext } from '../../context/WeatherContext'
 import { getBestDay, convertTemp, formatTemp } from '../../lib/weather-utils'
+import { useScrollReveal } from '../../hooks/useScrollReveal'
 
 export function BestDay() {
   const { weatherData, unit } = useWeatherContext()
   const { forecast, loading } = weatherData
+  const revealRef = useScrollReveal(225)
 
   if (loading || forecast.length === 0) return null
 
@@ -11,7 +13,7 @@ export function BestDay() {
   const highTemp = convertTemp(best.tempHigh, unit)
 
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4">
+    <section ref={revealRef} className="px-4 max-w-3xl mx-auto mt-4">
       <div className="glass p-5 text-center">
         <p className="section-label mb-3">
           Best Day This Week

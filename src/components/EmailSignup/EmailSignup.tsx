@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useWeatherContext } from '../../context/WeatherContext'
+import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { subscribeToEmail } from '../../lib/firebase'
 
 export function EmailSignup() {
   const { city, unit } = useWeatherContext()
+  const revealRef = useScrollReveal(450)
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -34,7 +36,7 @@ export function EmailSignup() {
   }
 
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4">
+    <section ref={revealRef} className="px-4 max-w-3xl mx-auto mt-4">
       <div className="glass p-5">
         <p className="section-label mb-1">
           Daily Weather Email

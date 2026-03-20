@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useWeatherContext } from '../../context/WeatherContext'
+import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { searchCities, fetchCurrentWeather } from '../../lib/api'
 import { convertTemp, formatTemp } from '../../lib/weather-utils'
 import type { City, OWMCurrentWeather, OWMGeoResult } from '../../types/weather'
@@ -7,6 +8,7 @@ import type { City, OWMCurrentWeather, OWMGeoResult } from '../../types/weather'
 export function CityComparison() {
   const { city, weatherData, unit } = useWeatherContext()
   const { current } = weatherData
+  const revealRef = useScrollReveal(300)
 
   const [compareCity, setCompareCity] = useState<City | null>(null)
   const [compareWeather, setCompareWeather] = useState<OWMCurrentWeather | null>(null)
@@ -64,7 +66,7 @@ export function CityComparison() {
     : []
 
   return (
-    <section className="px-4 max-w-3xl mx-auto mt-4" aria-live="polite">
+    <section ref={revealRef} className="px-4 max-w-3xl mx-auto mt-4" aria-live="polite">
       <div className="glass p-4">
         <div className="flex items-center justify-between mb-3">
           <p className="section-label">
