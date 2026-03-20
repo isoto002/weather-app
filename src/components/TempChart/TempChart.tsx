@@ -50,7 +50,7 @@ export function TempChart() {
                 color: isLight ? '#1d1d1f' : 'white',
                 fontSize: '12px',
               }}
-              formatter={(value: number, name: string) => [`${value}°${unit}`, name]}
+              formatter={(value, name) => [`${value}°${unit}`, name]}
             />
             <Line
               type="monotone"
