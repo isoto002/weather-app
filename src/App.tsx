@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react'
 import { useWeatherContext } from './context/WeatherContext'
+import { useAmbientSound } from './hooks/useAmbientSound'
+import { getWeatherCondition } from './lib/weather-utils'
 import { Background } from './components/Background/Background'
 import { Header } from './components/Header/Header'
 import { Hero } from './components/Hero/Hero'
@@ -13,9 +16,24 @@ import { EmailSignup } from './components/EmailSignup/EmailSignup'
 import { HourlyForecast } from './components/HourlyForecast/HourlyForecast'
 
 function App() {
-  const { theme } = useWeatherContext()
+  const { theme, weatherData, soundMuted } = useWeatherContext()
+  const { current } = weatherData
+
+  const condition = current ? getWeatherCondition(current.weather[0].id) : null
+  const isNight = current
+    ? current.dt > current.sys.sunset || current.dt < current.sys.sunrise
+    : false
+
+  useAmbientSound(condition, isNight, soundMuted)
+
+  const [pageVisible, setPageVisible] = useState(false)
+
+  useEffect(() => {
+    requestAnimationFrame(() => setPageVisible(true))
+  }, [])
+
   return (
-    <div className="min-h-screen relative" data-theme={theme}>
+    <div className={`min-h-screen relative page-enter ${pageVisible ? 'page-visible' : ''}`} data-theme={theme}>
       <Background />
       <div className="relative z-10">
         <a

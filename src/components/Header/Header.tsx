@@ -4,7 +4,7 @@ import { searchCities } from '../../lib/api'
 import type { City, OWMGeoResult } from '../../types/weather'
 
 export function Header() {
-  const { city, setCity, removeCity, recentCities, unit, toggleUnit, theme, toggleTheme } =
+  const { city, setCity, removeCity, recentCities, unit, toggleUnit, theme, toggleTheme, soundMuted, toggleSound } =
     useWeatherContext()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<OWMGeoResult[]>([])
@@ -100,6 +100,15 @@ export function Header() {
             className="glass px-3 py-2 text-sm transition-colors"
           >
             {theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19'}
+          </button>
+
+          {/* Sound toggle */}
+          <button
+            onClick={toggleSound}
+            aria-label={soundMuted ? 'Unmute ambient sounds' : 'Mute ambient sounds'}
+            className="glass px-3 py-2 text-sm transition-colors"
+          >
+            {soundMuted ? '🔇' : '🔊'}
           </button>
         </div>
 

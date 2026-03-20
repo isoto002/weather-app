@@ -20,6 +20,8 @@ interface WeatherContextType {
   toggleUnit: () => void
   theme: ThemeMode
   toggleTheme: () => void
+  soundMuted: boolean
+  toggleSound: () => void
 
   // Geolocation
   geoError: string | null
@@ -41,6 +43,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       : 'dark'
   )
   const [recentCities, setRecentCities] = useLocalStorage<City[]>('weather-recent-cities', [])
+  const [soundMuted, setSoundMuted] = useLocalStorage<boolean>('weather-sound-muted', true)
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
 
   const activeLat = selectedCity?.lat ?? geo.lat
@@ -78,6 +81,10 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }, [setTheme])
 
+  const toggleSound = useCallback(() => {
+    setSoundMuted((prev) => !prev)
+  }, [setSoundMuted])
+
   // Derive city from weather data if using geolocation
   const city: City | null = selectedCity ?? (weather.current
     ? {
@@ -101,6 +108,8 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         toggleUnit,
         theme,
         toggleTheme,
+        soundMuted,
+        toggleSound,
         geoError: geo.error,
         geoLoading: geo.loading,
         lastFetchedAt: weather.lastFetchedAt,
