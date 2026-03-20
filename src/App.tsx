@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useWeatherContext } from './context/WeatherContext'
 import { useAmbientSound } from './hooks/useAmbientSound'
+import { usePullToRefresh } from './hooks/usePullToRefresh'
 import { getWeatherCondition } from './lib/weather-utils'
 import { Background } from './components/Background/Background'
 import { Header } from './components/Header/Header'
@@ -16,7 +17,7 @@ import { EmailSignup } from './components/EmailSignup/EmailSignup'
 import { HourlyForecast } from './components/HourlyForecast/HourlyForecast'
 
 function App() {
-  const { theme, weatherData, soundMuted } = useWeatherContext()
+  const { theme, weatherData, soundMuted, refresh } = useWeatherContext()
   const { current } = weatherData
 
   const condition = current ? getWeatherCondition(current.weather[0].id) : null
@@ -25,6 +26,8 @@ function App() {
     : false
 
   useAmbientSound(condition, isNight, soundMuted)
+
+  const { pulling, pullDistance } = usePullToRefresh({ onRefresh: refresh })
 
   const [pageVisible, setPageVisible] = useState(false)
 
@@ -36,6 +39,14 @@ function App() {
     <div className={`min-h-screen relative page-enter ${pageVisible ? 'page-visible' : ''}`} data-theme={theme}>
       <Background />
       <div className="relative z-10">
+        {pulling && (
+          <div
+            className="fixed top-0 left-0 right-0 z-50 flex justify-center transition-transform"
+            style={{ transform: `translateY(${pullDistance - 40}px)` }}
+          >
+            <div className={`w-8 h-8 rounded-full border-2 border-white/30 border-t-white/80 ${pullDistance >= 80 ? 'animate-spin' : ''}`} />
+          </div>
+        )}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:glass focus:px-4 focus:py-2 focus:text-white"
