@@ -1,4 +1,5 @@
 import { useWeatherContext } from '../../context/WeatherContext'
+import { CountUp } from '../CountUp/CountUp'
 
 export function HumidityWidget() {
   const { weatherData } = useWeatherContext()
@@ -12,7 +13,7 @@ export function HumidityWidget() {
   return (
     <div className="glass p-4">
       <p className="section-label mb-2">Humidity</p>
-      <p className="text-2xl font-light text-white">{humidity}%</p>
+      <CountUp value={humidity} suffix="%" className="text-2xl font-light text-white" />
       <p className="text-[10px] text-white/50 mt-1">{label}</p>
     </div>
   )

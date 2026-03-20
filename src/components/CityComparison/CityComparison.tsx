@@ -122,7 +122,7 @@ export function CityComparison() {
             )}
           </div>
         ) : loading ? (
-          <div className="animate-pulse h-24 bg-white/5 rounded-lg" />
+          <div className="h-24 skeleton-shimmer rounded-lg" />
         ) : compareWeather ? (
           <div>
             <div className="grid grid-cols-2 gap-4 mb-4 text-center">

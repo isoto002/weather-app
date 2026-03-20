@@ -23,12 +23,12 @@ export function Forecast() {
     return (
       <section className="px-4 max-w-3xl mx-auto">
         <div className="glass p-4">
-          <div className="animate-pulse flex gap-4">
+          <div className="flex gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex-1 text-center">
-                <div className="h-3 w-8 bg-white/10 rounded mx-auto mb-2" />
-                <div className="h-8 w-8 bg-white/10 rounded mx-auto mb-2" />
-                <div className="h-3 w-12 bg-white/10 rounded mx-auto" />
+                <div className="h-3 w-8 skeleton-shimmer rounded mx-auto mb-2" />
+                <div className="h-8 w-8 skeleton-shimmer rounded mx-auto mb-2" />
+                <div className="h-3 w-12 skeleton-shimmer rounded mx-auto" />
               </div>
             ))}
           </div>

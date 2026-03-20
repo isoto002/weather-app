@@ -13,7 +13,7 @@ export function TempChart() {
     return (
       <section className="px-4 max-w-3xl mx-auto mt-4">
         <div className="glass p-4">
-          <div className="animate-pulse h-[140px] bg-white/5 rounded-lg" />
+          <div className="h-[140px] skeleton-shimmer rounded-lg" />
         </div>
       </section>
     )
