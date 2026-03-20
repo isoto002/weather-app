@@ -3,6 +3,14 @@ import { describe, it, expect, vi } from 'vitest'
 import App from './App'
 import { WeatherProvider } from './context/WeatherContext'
 
+// Mock IntersectionObserver for useScrollReveal
+class MockIntersectionObserver {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
+global.IntersectionObserver = MockIntersectionObserver as any
+
 HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   clearRect: vi.fn(),
   fillRect: vi.fn(),
