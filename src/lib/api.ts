@@ -43,6 +43,13 @@ export async function fetchAirQuality(
   )
 }
 
+export async function reverseGeocode(lat: number, lon: number): Promise<OWMGeoResult | null> {
+  const results = await fetchJSON<OWMGeoResult[]>(
+    `${BASE_URL}/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`
+  )
+  return results[0] ?? null
+}
+
 export async function searchCities(query: string): Promise<OWMGeoResult[]> {
   if (!query.trim()) return []
   const encoded = encodeURIComponent(query).replace(/%20/g, '+')

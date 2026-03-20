@@ -3,9 +3,19 @@ import { convertTemp, getWeatherCondition } from '../../lib/weather-utils'
 import { useElapsedTime } from '../../hooks/useElapsedTime'
 import { CountUp } from '../CountUp/CountUp'
 
-const CONDITION_EMOJI: Record<string, { emoji: string; animation: string }> = {
+const DAY_EMOJI: Record<string, { emoji: string; animation: string }> = {
   clear: { emoji: '☀️', animation: 'emoji-spin' },
   'partly-cloudy': { emoji: '⛅', animation: 'emoji-float' },
+  cloudy: { emoji: '☁️', animation: 'emoji-float' },
+  rain: { emoji: '🌧️', animation: 'emoji-bob' },
+  thunderstorm: { emoji: '⛈️', animation: 'emoji-shake' },
+  snow: { emoji: '🌨️', animation: 'emoji-drift' },
+  fog: { emoji: '🌫️', animation: 'emoji-fog-pulse' },
+}
+
+const NIGHT_EMOJI: Record<string, { emoji: string; animation: string }> = {
+  clear: { emoji: '🌙', animation: 'emoji-float' },
+  'partly-cloudy': { emoji: '☁️', animation: 'emoji-float' },
   cloudy: { emoji: '☁️', animation: 'emoji-float' },
   rain: { emoji: '🌧️', animation: 'emoji-bob' },
   thunderstorm: { emoji: '⛈️', animation: 'emoji-shake' },
@@ -68,14 +78,16 @@ export function Hero() {
   const high = Math.round(convertTemp(current.main.temp_max, unit))
   const low = Math.round(convertTemp(current.main.temp_min, unit))
   const condition = getWeatherCondition(current.weather[0].id)
-  const emojiInfo = CONDITION_EMOJI[condition] ?? CONDITION_EMOJI.clear
+  const isNight = current.dt > current.sys.sunset || current.dt < current.sys.sunrise
+  const emojiMap = isNight ? NIGHT_EMOJI : DAY_EMOJI
+  const emojiInfo = emojiMap[condition] ?? DAY_EMOJI.clear
   const greeting = getGreeting(current.timezone ?? 0)
 
   return (
     <section className="text-center py-12 px-4" aria-live="polite">
       <p className="section-label mb-1">{greeting}</p>
       <p className="text-xs uppercase tracking-[0.2em] text-white/50 mb-2">
-        {city.name}{city.state ? `, ${city.state}` : ''}, {city.country}
+        {city.name}{city.state ? `, ${city.state}` : `, ${city.country}`}
       </p>
 
       <span className={`inline-block text-4xl mb-2 ${emojiInfo.animation}`}>

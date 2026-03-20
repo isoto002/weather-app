@@ -1,22 +1,34 @@
 import { useWeatherContext } from '../../context/WeatherContext'
-import { getGoldenHour } from '../../lib/weather-utils'
+import { getGoldenHour, formatLocationTime } from '../../lib/weather-utils'
 
-function formatTime(unix: number): string {
-  return new Date(unix * 1000).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  })
-}
+const arcColors = {
+  dark: {
+    track: 'rgba(255,255,255,0.1)',
+    golden: 'rgba(255, 183, 77, 0.3)',
+    sun: 'rgba(255, 200, 50, 0.9)',
+    time: 'text-white/50',
+    goldenText: 'text-amber-300/60',
+  },
+  light: {
+    track: 'rgba(0,0,0,0.12)',
+    golden: 'rgba(200, 130, 0, 0.5)',
+    sun: 'rgba(230, 160, 0, 0.95)',
+    time: 'text-black/50',
+    goldenText: 'text-amber-700/70',
+  },
+} as const
 
 export function SunWidget() {
-  const { weatherData } = useWeatherContext()
+  const { weatherData, theme } = useWeatherContext()
   const { current } = weatherData
+  const colors = arcColors[theme]
 
   if (!current) return null
 
   const { sunrise, sunset } = current.sys
+  const tz = current.timezone ?? 0
   const golden = getGoldenHour(sunrise, sunset)
+  const fmt = (unix: number) => formatLocationTime(unix, tz)
   const now = current.dt
   const dayLength = sunset - sunrise
   const elapsed = Math.max(0, Math.min(dayLength, now - sunrise))
@@ -34,36 +46,36 @@ export function SunWidget() {
           <path
             d="M 10 55 Q 100 -10 190 55"
             fill="none"
-            stroke="rgba(255,255,255,0.1)"
+            stroke={colors.track}
             strokeWidth="2"
           />
           <path
             d="M 10 55 Q 30 35 50 30"
             fill="none"
-            stroke="rgba(255, 183, 77, 0.3)"
+            stroke={colors.golden}
             strokeWidth="3"
           />
           <path
             d="M 150 30 Q 170 35 190 55"
             fill="none"
-            stroke="rgba(255, 183, 77, 0.3)"
+            stroke={colors.golden}
             strokeWidth="3"
           />
           <circle
             cx={10 + (progress / 100) * 180}
             cy={55 - Math.sin((progress / 100) * Math.PI) * 55}
             r="5"
-            fill="rgba(255, 200, 50, 0.9)"
+            fill={colors.sun}
           />
         </svg>
       </div>
 
       <div className="flex justify-between text-[10px]">
-        <span className="text-white/50">↑ {formatTime(sunrise)}</span>
-        <span className="text-amber-300/60 text-[9px]">
-          Golden {formatTime(golden.evening.start)}
+        <span className={colors.time}>↑ {fmt(sunrise)}</span>
+        <span className={`${colors.goldenText} text-[9px]`}>
+          Golden {fmt(golden.evening.start)}
         </span>
-        <span className="text-white/50">↓ {formatTime(sunset)}</span>
+        <span className={colors.time}>↓ {fmt(sunset)}</span>
       </div>
     </div>
   )

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useWeatherContext } from './context/WeatherContext'
-import { useAmbientSound } from './hooks/useAmbientSound'
 import { usePullToRefresh } from './hooks/usePullToRefresh'
-import { getWeatherCondition } from './lib/weather-utils'
 import { Background } from './components/Background/Background'
 import { Header } from './components/Header/Header'
 import { Hero } from './components/Hero/Hero'
@@ -17,15 +15,7 @@ import { EmailSignup } from './components/EmailSignup/EmailSignup'
 import { HourlyForecast } from './components/HourlyForecast/HourlyForecast'
 
 function App() {
-  const { theme, weatherData, soundMuted, refresh } = useWeatherContext()
-  const { current } = weatherData
-
-  const condition = current ? getWeatherCondition(current.weather[0].id) : null
-  const isNight = current
-    ? current.dt > current.sys.sunset || current.dt < current.sys.sunrise
-    : false
-
-  useAmbientSound(condition, isNight, soundMuted)
+  const { theme, refresh } = useWeatherContext()
 
   const { pulling, pullDistance } = usePullToRefresh({ onRefresh: refresh })
 

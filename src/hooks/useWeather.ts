@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { fetchCurrentWeather, fetchForecast, fetchAirQuality } from '../lib/api'
+import { fetchCurrentWeather, fetchForecast, fetchAirQuality, reverseGeocode } from '../lib/api'
 import { fetchAlerts } from '../lib/nws-api'
 import { getWeatherCondition } from '../lib/weather-utils'
 import type {
   OWMCurrentWeather,
+  OWMGeoResult,
   DayForecast,
   OWMAirQuality,
   NWSAlert,
@@ -20,6 +21,7 @@ interface UseWeatherResult {
   refresh: () => void
   lastFetchedAt: number | null
   hourlyItems: OWMForecastItem[]
+  geoCity: OWMGeoResult | null
 }
 
 const CACHE_TTL = 10 * 60 * 1000 // 10 minutes
@@ -41,7 +43,7 @@ function processForecast(items: OWMForecastItem[]): DayForecast[] {
 
     days.push({
       date,
-      dayName: new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }),
+      dayName: new Date(date + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }),
       tempHigh: Math.round(Math.max(...temps)),
       tempLow: Math.round(Math.min(...temps)),
       condition: getWeatherCondition(midday.weather[0].id),
@@ -64,6 +66,7 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
   const [error, setError] = useState<string | null>(null)
   const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null)
   const [hourlyItems, setHourlyItems] = useState<OWMForecastItem[]>([])
+  const [geoCity, setGeoCity] = useState<OWMGeoResult | null>(null)
   const cacheRef = useRef<{ key: string; time: number } | null>(null)
 
   const fetchAll = useCallback(async () => {
@@ -82,16 +85,18 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
     setError(null)
 
     try {
-      const [currentData, forecastData, aqiData, alertsData] = await Promise.all([
+      const [currentData, forecastData, aqiData, alertsData, geoCityData] = await Promise.all([
         fetchCurrentWeather(lat, lon),
         fetchForecast(lat, lon),
         fetchAirQuality(lat, lon).catch(() => null),
         fetchAlerts(lat, lon),
+        reverseGeocode(lat, lon).catch(() => null),
       ])
 
       setCurrent(currentData)
       setForecast(processForecast(forecastData.list))
-      setHourlyItems(forecastData.list.slice(0, 8))
+      setHourlyItems(forecastData.list.slice(0, 9))
+      setGeoCity(geoCityData)
       setAirQuality(aqiData)
       setAlerts(alertsData)
       cacheRef.current = { key: cacheKey, time: Date.now() }
@@ -112,5 +117,5 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
     fetchAll()
   }, [fetchAll])
 
-  return { current, forecast, airQuality, alerts, loading, error, refresh, lastFetchedAt, hourlyItems }
+  return { current, forecast, airQuality, alerts, loading, error, refresh, lastFetchedAt, hourlyItems, geoCity }
 }

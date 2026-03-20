@@ -5,6 +5,21 @@ import type {
   OutfitSuggestion,
 } from '../types/weather'
 
+/**
+ * Format a Unix timestamp in the weather location's timezone.
+ * OWM provides `timezone` as seconds offset from UTC.
+ */
+export function formatLocationTime(
+  unixSeconds: number,
+  timezoneOffset: number,
+  options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', hour12: true }
+): string {
+  // Shift the timestamp by the location's offset, then format as UTC
+  // This gives us the local time at the weather location
+  const adjustedMs = (unixSeconds + timezoneOffset) * 1000
+  return new Date(adjustedMs).toLocaleTimeString('en-US', { ...options, timeZone: 'UTC' })
+}
+
 export function convertTemp(tempF: number, unit: TemperatureUnit): number {
   if (unit === 'F') return tempF
   return (tempF - 32) * (5 / 9)

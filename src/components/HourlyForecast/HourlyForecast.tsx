@@ -1,6 +1,6 @@
 import { useWeatherContext } from '../../context/WeatherContext'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
-import { convertTemp } from '../../lib/weather-utils'
+import { convertTemp, formatLocationTime } from '../../lib/weather-utils'
 import type { OWMForecastItem } from '../../types/weather'
 
 const WEATHER_ICONS: Record<string, string> = {
@@ -32,7 +32,7 @@ export function HourlyForecast() {
       <section className="px-4 max-w-3xl mx-auto mt-4">
         <div className="glass p-4">
           <div className="flex gap-4">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({ length: 9 }).map((_, i) => (
               <div key={i} className="flex-shrink-0 w-[60px] text-center">
                 <div className="h-3 w-8 skeleton-shimmer rounded mx-auto mb-2" />
                 <div className="h-6 w-6 skeleton-shimmer rounded mx-auto mb-2" />
@@ -47,6 +47,8 @@ export function HourlyForecast() {
 
   if (!current || hourlyItems.length === 0) return null
 
+  const tz = current.timezone ?? 0
+
   const items: HourlyItem[] = [
     // "Now" item from current weather
     {
@@ -55,12 +57,9 @@ export function HourlyForecast() {
       temp: Math.round(convertTemp(current.main.temp, unit)),
       isNow: true,
     },
-    // Next 7 forecast slots
-    ...hourlyItems.slice(0, 7).map((item: OWMForecastItem) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        hour12: true,
-      }),
+    // Next 8 forecast slots
+    ...hourlyItems.slice(0, 8).map((item: OWMForecastItem) => ({
+      time: formatLocationTime(item.dt, tz, { hour: 'numeric', hour12: true }),
       icon: item.weather[0].icon,
       temp: Math.round(convertTemp(item.main.temp, unit)),
       isNow: false,

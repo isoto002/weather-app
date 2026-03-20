@@ -16,15 +16,15 @@ const dayConfigs: Record<WeatherCondition, BackgroundConfig> = {
   },
   'partly-cloudy': {
     gradient: ['#5a7fa5', '#8aacc8', '#b0c4d8'],
-    particleType: 'clouds',
-    particleCount: 8,
-    particleSpeed: 0.5,
+    particleType: 'none',
+    particleCount: 0,
+    particleSpeed: 0,
   },
   cloudy: {
     gradient: ['#5a6a7a', '#7a8a9a', '#9aa0a8'],
-    particleType: 'clouds',
-    particleCount: 15,
-    particleSpeed: 0.3,
+    particleType: 'none',
+    particleCount: 0,
+    particleSpeed: 0,
   },
   rain: {
     gradient: ['#1a1a2e', '#2d3a5c', '#4a5a7a'],
@@ -46,9 +46,9 @@ const dayConfigs: Record<WeatherCondition, BackgroundConfig> = {
   },
   fog: {
     gradient: ['#8a9aa8', '#a0b0b8', '#c0c8d0'],
-    particleType: 'fog',
-    particleCount: 10,
-    particleSpeed: 0.2,
+    particleType: 'none',
+    particleCount: 0,
+    particleSpeed: 0,
   },
 }
 
@@ -67,9 +67,9 @@ const nightConfigs: Record<WeatherCondition, BackgroundConfig> = {
   },
   cloudy: {
     gradient: ['#151520', '#1d1d2a', '#252535'],
-    particleType: 'clouds',
-    particleCount: 10,
-    particleSpeed: 0.2,
+    particleType: 'none',
+    particleCount: 0,
+    particleSpeed: 0,
   },
   rain: {
     gradient: ['#0a0a15', '#151525', '#1d1d35'],
@@ -91,9 +91,9 @@ const nightConfigs: Record<WeatherCondition, BackgroundConfig> = {
   },
   fog: {
     gradient: ['#1a1a25', '#252530', '#30303a'],
-    particleType: 'fog',
-    particleCount: 10,
-    particleSpeed: 0.15,
+    particleType: 'none',
+    particleCount: 0,
+    particleSpeed: 0,
   },
 }
 
