@@ -8,6 +8,26 @@ interface Particle {
   life: number
 }
 
+interface ShootingStar {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  length: number
+  opacity: number
+  life: number
+  maxLife: number
+}
+
+interface Splash {
+  x: number
+  y: number
+  radius: number
+  maxRadius: number
+  opacity: number
+  life: number
+}
+
 type ParticleType = 'rain' | 'snow' | 'clouds' | 'sun' | 'lightning' | 'fog' | 'stars' | 'none'
 
 export class ParticleEngine {
@@ -20,6 +40,9 @@ export class ParticleEngine {
   private maxParticles: number = 0
   private lightningTimer: number = 0
   private lightningFlash: boolean = false
+  private shootingStars: ShootingStar[] = []
+  private shootingStarTimer: number = 0
+  private splashes: Splash[] = []
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
@@ -37,6 +60,9 @@ export class ParticleEngine {
     this.maxParticles = count
     this.speed = speed
     this.particles = []
+    this.shootingStars = []
+    this.shootingStarTimer = 0
+    this.splashes = []
 
     for (let i = 0; i < count; i++) {
       this.particles.push(this.createParticle())
@@ -151,6 +177,44 @@ export class ParticleEngine {
       }
     }
 
+    // Shooting stars — only during night (stars particle type)
+    if (this.type === 'stars') {
+      this.shootingStarTimer++
+      // Spawn one roughly every 3-8 seconds (at ~60fps)
+      if (this.shootingStarTimer > 180 + Math.random() * 300) {
+        this.shootingStarTimer = 0
+        const angle = Math.PI * 0.15 + Math.random() * Math.PI * 0.2 // ~25-65° downward
+        const speed = 6 + Math.random() * 6
+        this.shootingStars.push({
+          x: Math.random() * w * 0.8,
+          y: Math.random() * h * 0.4,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          length: 40 + Math.random() * 60,
+          opacity: 0.7 + Math.random() * 0.3,
+          life: 0,
+          maxLife: 30 + Math.random() * 30,
+        })
+      }
+
+      // Update active shooting stars
+      for (const s of this.shootingStars) {
+        s.x += s.vx
+        s.y += s.vy
+        s.life++
+      }
+      // Remove dead ones
+      this.shootingStars = this.shootingStars.filter((s) => s.life < s.maxLife)
+    }
+
+    // Update splashes
+    for (const s of this.splashes) {
+      s.life++
+      s.radius += (s.maxRadius - 1) / 15
+      s.opacity *= 0.9
+    }
+    this.splashes = this.splashes.filter((s) => s.opacity > 0.02)
+
     for (const p of this.particles) {
       p.x += p.vx
       p.y += p.vy
@@ -166,6 +230,16 @@ export class ParticleEngine {
 
       // Reset particles that go off screen
       if (p.y > h + 20) {
+        if ((this.type === 'rain' || this.type === 'lightning') && this.splashes.length < 10) {
+          this.splashes.push({
+            x: p.x,
+            y: h - 5 + Math.random() * 10,
+            radius: 1,
+            maxRadius: 3 + Math.random() * 2,
+            opacity: 0.4,
+            life: 0,
+          })
+        }
         p.y = -20
         p.x = Math.random() * w
       }
@@ -229,6 +303,44 @@ export class ParticleEngine {
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
           ctx.fill()
           break
+      }
+    }
+
+    // Draw rain splashes
+    if (this.type === 'rain' || this.type === 'lightning') {
+      for (const s of this.splashes) {
+        ctx.globalAlpha = s.opacity
+        ctx.strokeStyle = 'rgba(174, 194, 224, 0.6)'
+        ctx.lineWidth = 0.5
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+    }
+
+    // Draw shooting stars
+    if (this.type === 'stars') {
+      for (const s of this.shootingStars) {
+        const fade = 1 - s.life / s.maxLife
+        const tailX = s.x - (s.vx / Math.sqrt(s.vx * s.vx + s.vy * s.vy)) * s.length
+        const tailY = s.y - (s.vy / Math.sqrt(s.vx * s.vx + s.vy * s.vy)) * s.length
+
+        const grad = ctx.createLinearGradient(s.x, s.y, tailX, tailY)
+        grad.addColorStop(0, `rgba(255, 255, 255, ${s.opacity * fade})`)
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+        ctx.strokeStyle = grad
+        ctx.lineWidth = 1.5
+        ctx.beginPath()
+        ctx.moveTo(s.x, s.y)
+        ctx.lineTo(tailX, tailY)
+        ctx.stroke()
+
+        // Bright head
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity * fade})`
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, 1.5, 0, Math.PI * 2)
+        ctx.fill()
       }
     }
 

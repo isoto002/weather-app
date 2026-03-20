@@ -65,14 +65,20 @@ export function Background() {
 
   return (
     <div
-      className="fixed inset-0 transition-all duration-1000"
+      className="fixed inset-0 transition-all duration-[1500ms]"
       style={{ background: gradient }}
     >
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full transition-opacity duration-500"
         aria-hidden="true"
       />
+      {condition === 'clear' && isNight && (
+        <div className="aurora-overlay" aria-hidden="true" />
+      )}
+      {condition === 'clear' && !isNight && theme !== 'light' && (
+        <div className="lens-flare" aria-hidden="true" />
+      )}
     </div>
   )
 }
