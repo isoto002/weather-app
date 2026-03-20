@@ -19,6 +19,7 @@ export interface OWMCurrentWeather {
   sys: { sunrise: number; sunset: number; country: string }
   name: string
   dt: number
+  timezone?: number // Offset in seconds from UTC
 }
 
 // --- OpenWeatherMap 5-Day Forecast API response ---

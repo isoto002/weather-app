@@ -18,6 +18,8 @@ interface UseWeatherResult {
   loading: boolean
   error: string | null
   refresh: () => void
+  lastFetchedAt: number | null
+  hourlyItems: OWMForecastItem[]
 }
 
 const CACHE_TTL = 10 * 60 * 1000 // 10 minutes
@@ -60,6 +62,8 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
   const [alerts, setAlerts] = useState<NWSAlert[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null)
+  const [hourlyItems, setHourlyItems] = useState<OWMForecastItem[]>([])
   const cacheRef = useRef<{ key: string; time: number } | null>(null)
 
   const fetchAll = useCallback(async () => {
@@ -87,9 +91,11 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
 
       setCurrent(currentData)
       setForecast(processForecast(forecastData.list))
+      setHourlyItems(forecastData.list.slice(0, 8))
       setAirQuality(aqiData)
       setAlerts(alertsData)
       cacheRef.current = { key: cacheKey, time: Date.now() }
+      setLastFetchedAt(Date.now())
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch weather data')
     } finally {
@@ -106,5 +112,5 @@ export function useWeather(lat: number | null, lon: number | null): UseWeatherRe
     fetchAll()
   }, [fetchAll])
 
-  return { current, forecast, airQuality, alerts, loading, error, refresh }
+  return { current, forecast, airQuality, alerts, loading, error, refresh, lastFetchedAt, hourlyItems }
 }

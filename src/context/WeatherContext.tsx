@@ -24,6 +24,9 @@ interface WeatherContextType {
   // Geolocation
   geoError: string | null
   geoLoading: boolean
+
+  // Fetch metadata
+  lastFetchedAt: number | null
 }
 
 const WeatherContext = createContext<WeatherContextType | null>(null)
@@ -100,6 +103,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         toggleTheme,
         geoError: geo.error,
         geoLoading: geo.loading,
+        lastFetchedAt: weather.lastFetchedAt,
       }}
     >
       {children}
