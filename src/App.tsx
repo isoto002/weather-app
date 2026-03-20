@@ -10,6 +10,7 @@ import { BestDay } from './components/BestDay/BestDay'
 import { CityComparison } from './components/CityComparison/CityComparison'
 import { WeatherMap } from './components/WeatherMap/WeatherMap'
 import { EmailSignup } from './components/EmailSignup/EmailSignup'
+import { HourlyForecast } from './components/HourlyForecast/HourlyForecast'
 
 function App() {
   const { theme } = useWeatherContext()
@@ -26,6 +27,7 @@ function App() {
         <Header />
         <main id="main-content" className="pb-16">
           <Hero />
+          <HourlyForecast />
           <AlertBanner />
           <div className="mt-6">
             <Forecast />
